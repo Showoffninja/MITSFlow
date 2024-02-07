@@ -1,36 +1,33 @@
 # This is a basic workflow to help you get started with Actions
-
-name: CI
-
-# Controls when the workflow will run
+name: 'Create and save tag'
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+    branches:
+      - main
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+    - name: Tag name
+      id: create_tag
+      run: |
+        PREFIX=""
+        if [ "${{ inputs.complete }}" == "true" ]; then
+          PREFIX="release#"
+        fi
+        TAG_NAME="${PREFIX}$(date +'%Y%m%d%H%M%S')"
+        echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+      shell: bash
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+    - name: Create tag
+      run: |
+        TAG_NAME=$(echo ${{ steps.create_tag.outputs.TAG_NAME }})
+        git tag $TAG_NAME
+      shell: bash
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+    - name: 'Push tag'
+      run: |
+        TAG_NAME=$(echo ${{ steps.create_tag.outputs.TAG_NAME }})
+        git push origin $TAG_NAME
+      shell: bash
