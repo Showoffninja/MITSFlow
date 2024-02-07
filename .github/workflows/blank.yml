@@ -27,7 +27,7 @@ jobs:
         TAG_NAME=$(echo ${{ steps.create_tag.outputs.TAG_NAME }})
         git tag $TAG_NAME
       shell: bash
-
+      
     - name: 'Push tag'
       run: |
         TAG_NAME=$(echo ${{ steps.create_tag.outputs.TAG_NAME }})
