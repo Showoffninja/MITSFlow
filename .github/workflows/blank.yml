@@ -11,8 +11,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Tag name
-      id: create_tag
+    - name: Create tag
       run: |
         PREFIX=""
         if [ "${{ inputs.complete }}" == "true" ]; then
@@ -22,15 +21,9 @@ jobs:
         echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
       shell: bash
 
-    - name: Create tag
+    - name: Push tag
       run: |
-        TAG_NAME=$(echo ${{ steps.create_tag.outputs.TAG_NAME }})
-        git tag $TAG_NAME
-      shell: bash
-
-    - name: 'Push tag'
-      run: |
-        TAG_NAME=$(echo ${{ steps.create_tag.outputs.TAG_NAME }})
+        TAG_NAME=$(echo ${{ env.TAG_NAME }})
         git push origin $TAG_NAME
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
