@@ -23,6 +23,7 @@ jobs:
           PREFIX="release#"
         fi
         TAG_NAME="${PREFIX}$(date +'%Y%m%d%H%M%S')"
+        git tag $TAG_NAME
         echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
       shell: bash
 
