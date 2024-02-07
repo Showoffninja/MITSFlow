@@ -31,7 +31,7 @@ jobs:
     - name: 'Push tag'
       run: |
         TAG_NAME=$(echo ${{ steps.create_tag.outputs.TAG_NAME }})
-        git push origin HEAD:main $TAG_NAME
+        git push origin $TAG_NAME
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      shell: bash
+      shell: bash 
