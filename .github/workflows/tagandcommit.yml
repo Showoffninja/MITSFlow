@@ -1,0 +1,36 @@
+# This is a basic workflow to help you get started with Actions
+name: 'Create and save tag'
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up Git user
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+
+    - name: Create tag
+      run: |
+        PREFIX=""
+        if [ "${{ inputs.complete }}" == "true" ]; then
+          PREFIX="release#"
+        fi
+        TAG_NAME="${PREFIX}$(date +'%Y%m%d%H%M%S')"
+        git tag $TAG_NAME
+        echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Push tag
+      run: |
+        TAG_NAME=$(echo ${{ env.TAG_NAME }})
+        git push origin $TAG_NAME
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash 
