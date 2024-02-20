@@ -9,10 +9,11 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-        
+
         steps:
-        uses: nn-dma/security_check@main
-        with:
+        - name: Snyk Scanning
+          uses: nn-dma/security_check@main
+          with:
             SnykToken: ${{ secrets.SNYK_TOKEN }}
             PipelineRun: ${{ github.run_id }}
 
