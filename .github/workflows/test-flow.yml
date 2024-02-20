@@ -9,7 +9,7 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-        uses: nn-dma/security-scan-action@main
+        uses: nn-dma/security_check@main
         with:
             SnykToken: ${{ secrets.SNYK_TOKEN }}
             PipelineRun: ${{ github.run_id }}
