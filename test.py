@@ -1,55 +1,13 @@
-#########################################################################################
-#  Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-# 
-#  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-#  software and associated documentation files (the "Software"), to deal in the Software
-#  without restriction, including without limitation the rights to use, copy, modify,
-#  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-#  permit persons to whom the Software is furnished to do so.
-# 
-#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-#  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-#  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-#  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-#  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-#  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#########################################################################################
-
-import os, sys, time, decimal
-from decimal import *
 import boto3
 import json
 
-#session = boto3.Session(profile_name='SQZCDEV')
-dynamodb = boto3.Session(profile_name='SQZCDEV').resource('dynamodb', region_name='eu-central-1')
-table = dynamodb.Table('park')
+client = boto3.client('dynamodb')
+table = 'park'
 
-
-def loadfile(infile):
-
-    # This is only for a local test deepcode ignore PT: <please specify a reason of ignoring this>
-    jsonobj = json.load(open(infile))
-    lc = 1
-    for park_entry in jsonobj:
-        lc += 1
-        CreateTime = int(time.time())
-        ExpireTime = CreateTime + (1* 60* 60)
-        response = table.put_item(
-           Item={
-                'token': park_entry['token'],
-                'week': decimal.Decimal(park_entry['week']),
-                'info': json.dumps(park_entry['info']),
-                'CreateTime': CreateTime,
-                'ExpireTime': ExpireTime
-            }
-        )
-        if (lc % 10) == 0:
-            print ("%d rows inserted" % (lc))
-
-if __name__ == '__main__':
-    filename = sys.argv[1]
-    if os.path.exists(filename):
-        # file exists, continue
-        loadfile(filename)
-    else:
-        print ('Please enter a valid filename')
+client = DynamoDB.Client(
+    host='http://localhost:8000',
+    port=8000,
+    aws_access_key_id='12345678',
+    aws_secret_access_key='12345678',
+    is_secure=False
+    )
