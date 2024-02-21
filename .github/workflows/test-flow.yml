@@ -11,11 +11,10 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-        - name: Snyk Scanning
-          uses: nn-dma/security_check@main
+        - name: Check for install files
+          uses: nn-dma/check_for_custom_install_scripts@main
           with:
-            SnykToken: ${{ secrets.SNYK_TOKEN }}
-            Pipeline_Run: ${{ github.run_id }}
+            install_script_path: 'scripts/install'
 
 
     
